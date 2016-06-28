@@ -1,0 +1,19 @@
+﻿@{
+    ViewBag.Title = "Home";
+    Layout = "~/Views/Shared/_DefaultPage.cshtml";
+}
+@section menuSuperior{
+    @Html.Partial("~/Views/Shared/_MenuSuperior.cshtml")
+}
+
+<div class="jumbotron">
+    <div class="row">
+        <h1>Wellcome!</h1>
+    </div>
+    
+</div>
+<script type="text/javascript">
+    $(function () {
+        menuSuperior.home(true);
+    });
+</script>

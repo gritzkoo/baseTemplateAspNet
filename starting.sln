@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Express 14 for Web
 VisualStudioVersion = 14.0.25123.0
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebApplication1", "WebApplication1\WebApplication1.csproj", "{E59160A9-C3F0-446A-817B-6627F8213F0F}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StartApp", "WebApplication1\StartApp.csproj", "{E59160A9-C3F0-446A-817B-6627F8213F0F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

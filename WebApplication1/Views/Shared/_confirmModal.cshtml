@@ -1,0 +1,195 @@
+﻿<div id="koConfirmModal">
+    <div id="confirm-modal" class="modal fade" role="dialog" data-backdrop="static" data-keyboard="false">
+        <div class="modal-dialog">
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3 class="text-center">
+                        <strong data-bind="text: titulo"></strong>
+                    </h3>
+                </div>
+                <div class="modal-body">
+                    <h3 class="text-center" data-bind="text:mensagem"></h3>
+                </div>
+                <div class="modal-footer">
+                    <button type="button"
+                            data-dismiss="modal"
+                            data-bind="click:callbackOK"
+                            class="btn"
+                            style="margin:auto;">
+                        OK
+                    </button>
+                    <button type="button"
+                            data-dismiss="modal"
+                            data-bind="click:callbackCC"
+                            class="btn"
+                            style="margin:auto;">
+                        Cancelar
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="alert-modal" class="modal fade" role="dialog" data-backdrop="static" data-keyboard="false">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3 class="text-center">
+                        <strong name='title' data-bind="text: alertaTitulo"></strong>
+                    </h3>
+                </div>
+                <div class="modal-body">
+                    <h3 class="text-center" data-bind="text: alerta"></h3>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" data-dismiss="modal" data-bind="click: alertcallback" class="btn" style="margin:auto;">OK</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div id="loading-modal" class="modal fade" role="dialog" data-backdrop="static" data-keyboard="false">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3 class="text-center">
+                        <strong>Carregando...</strong>
+                    </h3>
+                </div>
+                <div class="modal-body">
+                    <p class="text-center">
+                        <img src="~/Images/giphy.gif" style="width:100px !important">
+                    </p>
+                    <p class="text-center" data-bind="visible: qtd() > 0">
+                        Aguarde, enviando
+                        <span data-bind="text: atual"></span> de <span data-bind="text: qtd"></span>...
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+
+<script type="text/javascript">
+
+	var confirmModal;
+
+	function ConfirmModal()
+	{
+		var self = this;
+		//propriedade responsavem pela exibição da mensagem do modal de confirmação
+		self.mensagem     = ko.observable();
+		//propriedade reponsavel pelo titulo da tela de confirmação
+		self.titulo       = ko.observable();
+		//callback do botão ok
+		self.callbackOK   = function(){};
+		//callback do botão cancelar
+		self.callbackCC   = function(){};
+		//propriedade responsavel pelo display da mensagem da tela de alerta
+		self.alerta       = ko.observable();
+		//propriedade responsavel pelo display do titulo da tela de alerta
+		self.alertaTitulo = ko.observable();
+		//função responsavel por atribuir ação ao borão de confirmação
+		self.alertcallback = function(){};
+		//propriedade resonsavel por exibir itens como 1 de 10 processando do modal de loading
+		self.qtd          = ko.observable();
+		//propriedade responsavel por contar itens processados do interador do modal de loading
+		self.atual        = ko.observable();
+
+		self.show = function(msg, callbackOk, callbackCancelar, title)
+		{
+			self.mensagem(msg);
+			self.titulo(title != undefined ? title : '');
+			$("#confirm-modal").modal("show");
+
+			self.callbackOK = callbackOk != undefined
+				? 	function ()
+					{
+						setTimeout(function()
+						{
+							callbackOk();
+						},50);
+						$("#confirm-modal").modal("hide");
+					}
+				: 	function ()
+					{
+						$("#confirm-modal").modal("hide");
+					}
+			self.callbackCC = callbackCancelar != undefined
+				? 	function ()
+					{
+						setTimeout(function()
+						{
+							callbackCancelar();
+						},50);
+						$("#confirm-modal").modal("hide");
+					}
+				: 	function ()
+					{
+						$("#confirm-modal").modal("hide");
+					}
+		}
+
+		@{
+            /**
+                MODO DE USAR
+                @paran color não é necessáriom caso enviar usar cor em hexadecima. ex:#ffffff
+                @paran msg mensagem de exibição da tela
+                @paran title não é necessário caso enviar irá aparecer titulo na pagina
+
+                ex: alertModal('msg de alerta');
+            */
+        }
+            self.alertar = function(msg, callback, titulo)
+            {
+                self.alerta(msg);
+                self.alertaTitulo(titulo != undefined ? titulo : '');
+                self.alertcallback = callback != undefined
+                ?   function()
+    
+                {
+                    setTimeout(function()
+
+                    {
+                        callback();
+                    },50);
+					$("#alert-modal").modal("hide");
+
+                }
+			: 	function()
+    
+                {
+					$("#alert-modal").modal("hide");
+                };
+			$("#alert-modal").modal("show");
+            }
+
+            self.loading = function(param, numero)
+            {
+                if((param == 'show' || param == 'hide') && (numero == undefined || numero == null))
+                {
+				$("#loading-modal").modal(param);
+                }
+                else
+                {
+                    if(param == 'show' && Number.isInteger(numero))
+                    {
+                        self.qtd(numero);
+                        self.atual(0);
+					$("#loading-modal").modal(param);
+                    }
+                    if(param == 'update' && Number.isInteger(numero))
+                    {
+                        self.atual(numero);
+                    }
+                }
+            }
+	}
+
+	confirmModal = new ConfirmModal();
+	ko.applyBindings(confirmModal, document.getElementById('koConfirmModal'));
+</script>
